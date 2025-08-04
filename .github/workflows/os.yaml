@@ -1,4 +1,4 @@
-name: Build containers
+name: Build OS images
 on:
   push:
     paths:
@@ -40,4 +40,4 @@ jobs:
           file: ./os/${{ matrix.os }}/Dockerfile
           push: true
           tags: |
-            ghcr.io/diamonddrakeventures/yolks:${{ matrix.os }}
+            ghcr.io/diamonddrakeventures/yolks/os:${{ matrix.os }}
