@@ -1,0 +1,43 @@
+name: Build OS images
+on:
+  push:
+    paths:
+      - ".github/workflows/installer.yaml"
+      - "installer/**"
+    branches:
+      - "*"
+    tags:
+      - "*"
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  packages: write
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ "alpine" ]
+    runs-on: ubuntu-24.04
+    name: Build ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+        with:
+          buildkitd-flags: --debug
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: ./installer/${{ matrix.os }}
+          file: ./installer/${{ matrix.os }}/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/diamonddrakeventures/yolks/installer:${{ matrix.os }}
