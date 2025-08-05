@@ -8,6 +8,7 @@ USER root
 ENV USER=root
 
 RUN apk add --update --no-cache \
+    libudev-zero \
     openjdk21
 
 USER container
