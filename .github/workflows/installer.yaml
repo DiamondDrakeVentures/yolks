@@ -1,4 +1,4 @@
-name: Build OS images
+name: Build installer images
 on:
   push:
     paths:
